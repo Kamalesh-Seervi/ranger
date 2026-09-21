@@ -5,7 +5,7 @@
 # ready-to-use ranger.rb to the GitHub Release. Copy that generated file into
 # your Homebrew tap (e.g. Formula/ranger.rb in kd14/homebrew-tap), then:
 #
-#   brew install kd14/tap/ranger
+#   brew install Kamalesh-Seervi/tap/ranger
 #
 # Note: homebrew-core already ships a "ranger" (the file manager). In your own
 # tap the name is fine; if you also use that tool, rename this formula/binary.
