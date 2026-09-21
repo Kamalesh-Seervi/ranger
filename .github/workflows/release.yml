@@ -23,10 +23,6 @@ jobs:
             goos: darwin
             goarch: arm64
             cgo: "1"
-          - runner: macos-13
-            goos: darwin
-            goarch: amd64
-            cgo: "1"
           - runner: ubuntu-latest
             goos: linux
             goarch: amd64
@@ -83,7 +79,6 @@ jobs:
           sed -i \
             -e "s/REPLACE_VERSION/${version}/g" \
             -e "s/REPLACE_DARWIN_ARM64/$(sha "ranger_${version}_darwin_arm64.tar.gz")/" \
-            -e "s/REPLACE_DARWIN_AMD64/$(sha "ranger_${version}_darwin_amd64.tar.gz")/" \
             -e "s/REPLACE_LINUX_ARM64/$(sha "ranger_${version}_linux_arm64.tar.gz")/" \
             -e "s/REPLACE_LINUX_AMD64/$(sha "ranger_${version}_linux_amd64.tar.gz")/" \
             dist/ranger.rb
