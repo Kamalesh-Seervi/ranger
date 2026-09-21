@@ -8,7 +8,7 @@ it readable without a networking background.
 
 Runs on macOS and Linux.
 
-![The ranger dashboard: a live radar and a plain-language summary of what is nearby](dashboard.png)
+![The ranger dashboard: a live radar and a plain-language summary of what is nearby](docs/dashboard.png)
 
 ## Build and run
 
@@ -32,6 +32,18 @@ Try it without any radios or permissions:
 ./ranger -fake -open
 ```
 
+### Install with Homebrew
+
+Once the formula is in your tap, install the latest release binary with:
+
+```sh
+brew install kd14/tap/ranger
+```
+
+Pushing a `v*` tag builds macOS and Linux binaries and publishes them — with a
+ready-to-use `ranger.rb` and `checksums.txt` — to a GitHub Release. Copy that
+generated `ranger.rb` into your tap to update it.
+
 ## What it detects
 
 | Source | Gives you | Needs |
@@ -51,7 +63,7 @@ strip across the top answers the obvious questions in plain language: where you
 are, how many devices are nearby, which one is closest, and anything worth
 noticing, such as an open Wi-Fi network or a device that keeps following you.
 
-![The summary strip: your place, device counts by kind, the closest device, and alerts](overview.png)
+![The summary strip: your place, device counts by kind, the closest device, and alerts](docs/overview.png)
 
 In the device table the jargon is translated to words. Signal strength reads
 *Strong* through *Weak*, distance reads *Right here* through *Far away*, and
@@ -59,7 +71,7 @@ Wi-Fi security reads *Secure* or *Open*; the exact figure — dBm, metres, WPA3 
 stays in the tooltip. Each row carries an icon for the device's guessed type, and
 a **? Guide** button, open on first run, explains every panel and term.
 
-![The built-in guide, which opens on first run and explains every panel and term](guide.png)
+![The built-in guide, which opens on first run and explains every panel and term](docs/guide.png)
 
 ## Identifying objects
 
@@ -79,7 +91,7 @@ italic rather than hidden, so a wrong guess stays visible and checkable. Signals
 that are genuinely ambiguous — Apple's *Nearby* and *Find My* are broadcast by
 phones, laptops and tags alike — deliberately stay tentative.
 
-![The device table: each row shows a guessed type with an icon, plus plain-language signal, distance and security](devices.png)
+![The device table: each row shows a guessed type with an icon, plus plain-language signal, distance and security](docs/devices.png)
 
 Ranger also separates devices that never move from ones being carried, using the
 p90−p10 spread of their signal. That distinction matters for the next feature.
