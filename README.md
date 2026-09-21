@@ -37,7 +37,7 @@ Try it without any radios or permissions:
 Once the formula is in your tap, install the latest release binary with:
 
 ```sh
-brew install kd14/tap/ranger
+brew install Kamalesh-Seervi/tap/ranger
 ```
 
 Pushing a `v*` tag builds macOS and Linux binaries and publishes them — with a
