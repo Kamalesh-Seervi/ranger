@@ -1,0 +1,99 @@
+name: release
+
+# Build cross-platform binaries and publish them to a GitHub Release when a
+# version tag (v1.2.3) is pushed. macOS binaries are built natively because the
+# default build links CoreWLAN/CoreBluetooth through cgo; Linux is pure Go.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build ${{ matrix.goos }}/${{ matrix.goarch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-14
+            goos: darwin
+            goarch: arm64
+            cgo: "1"
+          - runner: macos-13
+            goos: darwin
+            goarch: amd64
+            cgo: "1"
+          - runner: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            cgo: "0"
+          - runner: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            cgo: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build and package
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: ${{ matrix.cgo }}
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          out="ranger_${version}_${GOOS}_${GOARCH}"
+          mkdir -p build
+          go build -trimpath -ldflags "-s -w" -o build/ranger ./cmd/ranger
+          cp README.md build/
+          [ -f LICENSE ] && cp LICENSE build/ || true
+          tar -C build -czf "${out}.tar.gz" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: "*.tar.gz"
+          if-no-files-found: error
+
+  release:
+    name: publish release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checksums and Homebrew formula
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          ( cd dist && sha256sum *.tar.gz | tee checksums.txt )
+          sha() { awk -v f="$1" '$2 == f { print $1 }' dist/checksums.txt; }
+          cp packaging/homebrew/ranger.rb dist/ranger.rb
+          sed -i \
+            -e "s/REPLACE_VERSION/${version}/g" \
+            -e "s/REPLACE_DARWIN_ARM64/$(sha "ranger_${version}_darwin_arm64.tar.gz")/" \
+            -e "s/REPLACE_DARWIN_AMD64/$(sha "ranger_${version}_darwin_amd64.tar.gz")/" \
+            -e "s/REPLACE_LINUX_ARM64/$(sha "ranger_${version}_linux_arm64.tar.gz")/" \
+            -e "s/REPLACE_LINUX_AMD64/$(sha "ranger_${version}_linux_amd64.tar.gz")/" \
+            dist/ranger.rb
+          echo "---- generated Formula/ranger.rb ----"
+          cat dist/ranger.rb
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/checksums.txt
+            dist/ranger.rb
+          generate_release_notes: true
