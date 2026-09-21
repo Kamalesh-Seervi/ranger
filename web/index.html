@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranger — wireless survey</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="dot" id="link-dot"></span>
+    <h1>Ranger</h1>
+  </div>
+  <div class="counts" id="counts"></div>
+  <div class="spacer"></div>
+  <label class="field" title="How fast signal fades with distance. Lower for open space, higher for a cluttered room.">
+    <span>Signal → distance</span>
+    <input type="range" id="exponent" min="2" max="4" step="0.1" value="3">
+    <output id="exponent-out">3.0</output>
+  </label>
+  <input type="search" id="filter" placeholder="Search name, brand…" autocomplete="off">
+  <select id="category-filter" class="select" aria-label="Filter by object type">
+    <option value="all">All types</option>
+  </select>
+  <button type="button" id="guide-open" class="guide-btn" aria-label="How to read this">? Guide</button>
+</header>
+
+<section id="overview" class="overview"></section>
+
+<div id="alerts" class="alerts"></div>
+
+<main class="grid">
+  <section class="panel panel-radar">
+    <div class="panel-head">
+      <h2>Radar</h2>
+      <span class="hint">Distance estimated from RSSI — rough, uncalibrated</span>
+    </div>
+    <canvas id="radar"></canvas>
+  </section>
+
+  <section class="panel panel-finder">
+    <div class="panel-head">
+      <h2>Finder</h2>
+      <button id="finder-audio" class="toggle" type="button" aria-pressed="false">Audio off</button>
+    </div>
+    <div id="finder" class="finder"></div>
+  </section>
+
+  <section class="panel panel-spectrum">
+    <div class="panel-head">
+      <h2>Spectrum</h2>
+      <div class="tabs" id="band-tabs"></div>
+    </div>
+    <canvas id="spectrum"></canvas>
+  </section>
+
+  <section class="panel panel-table">
+    <div class="panel-head">
+      <h2>Devices</h2>
+      <div class="tabs" id="kind-tabs"></div>
+    </div>
+    <div class="table-wrap">
+      <table id="devices">
+        <thead>
+          <tr>
+            <th data-sort="kind">Type</th>
+            <th data-sort="name">Name</th>
+            <th data-sort="addr">Address</th>
+            <th data-sort="vendor">Vendor</th>
+            <th data-sort="channel">Ch</th>
+            <th data-sort="security">Security</th>
+            <th data-sort="rssi">Signal</th>
+            <th class="nosort">History</th>
+            <th data-sort="distance">Distance</th>
+            <th data-sort="lastSeen">Seen</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel panel-place">
+    <div class="panel-head">
+      <h2>Place</h2>
+      <span class="hint" id="place-anchors"></span>
+    </div>
+    <div id="place" class="place"></div>
+  </section>
+
+  <section class="panel panel-sensing" id="sensing-panel" hidden>
+    <div class="panel-head">
+      <h2>Through-wall sensing</h2>
+      <span class="hint" id="sensing-hint"></span>
+    </div>
+    <div id="sensing" class="sensing"></div>
+  </section>
+
+  <section class="panel panel-scanners">
+    <div class="panel-head"><h2>Scanners</h2></div>
+    <ul id="scanners" class="scanners"></ul>
+  </section>
+</main>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
