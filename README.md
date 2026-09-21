@@ -8,7 +8,7 @@ it readable without a networking background.
 
 Runs on macOS and Linux.
 
-![The ranger dashboard: a live radar and a plain-language summary of what is nearby](docs/dashboard.png)
+![The ranger dashboard: a live radar and a plain-language summary of what is nearby](dashboard.png)
 
 ## Build and run
 
